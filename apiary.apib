@@ -5,76 +5,107 @@ HOST: http://localhost:8000
 SE380 - Software Architecture
 Skeletal System
 
-## Questions Collection [/questions]
+## Current Address [/location/{user_id}/{lat}-{lon}]
+Communicate with Google's API to find the address of the user
 
-### List All Questions [GET]
+### Reverse Geolocation for GPS Coordinates [GET]
++ Parameters
+    + user_id - The ID number of the user making the request
+    + lat (number) - The latitude of the user
+    + lon (number) - The longitude of the user
 
++ Request
+
+        {
+            "user_id": "1024",
+            "lat": "46.0092",
+            "lon": "-48.4452"
+        }
+    
++ Response 200 (application/json)
+
+        [
+            "id": "value"
+            "todo": "fill this in"
+        ]
+
++ Response 404 (application/json)
+
+        {
+            "Unable to reach the reverse geolocation service. Please try again later."
+        }
+        
+## Nearby Points of Interest [/landmarks/{user_id}/{address_slug}]
+Find nearby landmarks and points of interest using an address
+
+### Find nearby landmarks [GET]
++ Parameters
+    + user_id - The ID number of the user making the request
+    + address_slug (String) - A slugified version of the user's current address
+    
++ Request
+    
+        {
+            "user_id": "1024",
+            "address": "233-E-Juneau-Ave-Milwaukee-Wi"
+        }
+        
 + Response 200 (application/json)
 
         [
             {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 2048
-                    }, {
-                        "choice": "Python",
-                        "votes": 1024
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 512
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 256
-                    }
-                ]
-            }
+                "name": "Parking Lot",
+                "description": "Lots of cars park here!",
+                "distance": "0.2",
+                "unit": "mi",
+                "friends_visited": [ 1023, 1025 ]
         ]
-
-### Create a New Question [POST]
-
-You may create your own question using this action. It takes a JSON
-object containing a question and a collection of answers in the
-form of choices.
-
-+ Request (application/json)
+        
++ Response 404 (application/json)
 
         {
-            "question": "Favourite programming language?",
-            "choices": [
-                "Swift",
-                "Python",
-                "Objective-C",
-                "Ruby"
-            ]
+            "Unable to find nearby landmarks. Please try again later."
         }
 
-+ Response 201 (application/json)
+## Suggested Points of Interest [/friends/suggested/{user_id}]
 
-    + Headers
+### Find Friends' Suggestions [GET]
++ parameters
+    + user_id - The ID number of the user making the request
+    
++ Request
 
-            Location: /questions/2
+        {
+            "user_id": "1024"
+        }
+    
++ Response 200 (application/json)
 
-    + Body
+        [ 1, 3, 14, 26, 142 ]
+    
+### Submit Point of Interest [POST]
++ parameters
+    + user_id - The ID number of the user making the request
+    
++ Request
 
-            {
-                "question": "Favourite programming language?",
-                "published_at": "2015-08-05T08:40:51.620Z",
-                "choices": [
-                    {
-                        "choice": "Swift",
-                        "votes": 0
-                    }, {
-                        "choice": "Python",
-                        "votes": 0
-                    }, {
-                        "choice": "Objective-C",
-                        "votes": 0
-                    }, {
-                        "choice": "Ruby",
-                        "votes": 0
-                    }
-                ]
-            }
+        {
+            "user_id": "1024",
+            "lat": "46.0092",
+            "lon": "-48.4452",
+            "title": "A New Landmark",
+            "description": "This landmark, my landmark, is the best landmark, I think we all agree. So good. The best."
+            "address_slug": "Amurica"
+        }
+        
++ Response 200 (application/json)
+
+        {
+            "Landmark *new_id* saved successfully"
+        }
+        
++ Response 404 (application/json)
+
+        {
+            "Landmark not submitted. Please try again later."
+        }
