@@ -7,10 +7,11 @@ HOST: http://localhost:8000
 
 ## Reverse Geolocation [/location/reverse]
 
-### Get Closest Address [GET /location/reverse/{lat}/{lon}]
-+ Parameters
-    + lat (number) - The latitude of the location to reverse
-    + lon (number) - The longitude of the location to reverse
+### Get Closest Address [GET /location/reverse]
++ Request
+    + Attributes
+        + lat (number) - The latitude of the location to reverse
+        + lon (number) - The longitude of the location to reverse
 + Response 200 (application/json)
     + Attributes
         - address Address
