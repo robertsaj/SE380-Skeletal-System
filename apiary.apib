@@ -2,110 +2,122 @@ FORMAT: 1A
 HOST: http://localhost:8000
 
 # Social Augmented Reality
-SE380 - Software Architecture
-Skeletal System
 
-## Current Address [/location/{user_id}/{lat}-{lon}]
-Communicate with Google's API to find the address of the user
+# Group Addresses
 
-### Reverse Geolocation for GPS Coordinates [GET]
+## Reverse Geolocation [/location/reverse]
+
+### Get Closest Address [GET /location/reverse/{lat}/{lon}]
 + Parameters
-    + user_id - The ID number of the user making the request
-    + lat (number) - The latitude of the user
-    + lon (number) - The longitude of the user
-
-+ Request
-
-        {
-            "user_id": "1024",
-            "lat": "46.0092",
-            "lon": "-48.4452"
-        }
-    
+    + lat (number) - The latitude of the location to reverse
+    + lon (number) - The longitude of the location to reverse
 + Response 200 (application/json)
+    + Attributes
+        - address Address
 
-        [
-            "id": "value"
-            "todo": "fill this in"
-        ]
+### Get List of Popular Nearby Addresses [GET /location/reverse/nearby]
++ Request
+    + Attributes
+        + lat (number) - The latitude of the location to search by
+        + lon (number) - The longitude of the location to search by
++ Response 200 (application/json)
+    + Attributes
+        - addresses array(Address)
 
-+ Response 404 (application/json)
+# Group Points of Interest
 
-        {
-            "Unable to reach the reverse geolocation service. Please try again later."
-        }
-        
-## Nearby Points of Interest [/landmarks/{user_id}/{address_slug}]
-Find nearby landmarks and points of interest using an address
+## Nearby Points of Interest [/landmarks]
 
-### Find nearby landmarks [GET]
+### Get All Nearby Points of Interest [GET /landmarks]
++ Response 200 (application/json)
+    + Attributes
+        - landmarks (array[Point of Interest])
+
+### Get Individual Point of Interest [GET /landmarks/{id}]
 + Parameters
-    + user_id - The ID number of the user making the request
-    + address_slug (String) - A slugified version of the user's current address
-    
-+ Request
-    
-        {
-            "user_id": "1024",
-            "address": "233-E-Juneau-Ave-Milwaukee-Wi"
-        }
-        
+    + id (number) - The landmark identifier
 + Response 200 (application/json)
+    + Attributes
+        - landmark (Point of Interest)
 
-        [
-            {
-                "name": "Parking Lot",
-                "description": "Lots of cars park here!",
-                "distance": "0.2",
-                "unit": "mi",
-                "friends_visited": [ 1023, 1025 ]
-        ]
-        
-+ Response 404 (application/json)
+### Get Nearby Points of Interest by Address [GET /landmarks/{address_slug}]
++ Parameters
+    + address_slug (string) - A slugified version of an address to search by
++ Response 200 (applicaton/json)
+    + Attributes
+        - landmarks (array[Point of Interest])
 
-        {
-            "Unable to find nearby landmarks. Please try again later."
-        }
-
-## Suggested Points of Interest [/friends/suggested/{user_id}]
-
-### Find Friends' Suggestions [GET]
-+ parameters
-    + user_id - The ID number of the user making the request
-    
-+ Request
-
-        {
-            "user_id": "1024"
-        }
-    
+### Get Popular Nearby Points of Interest [GET /landmarks/top]
 + Response 200 (application/json)
+    + Attributes
+        - landmarks (array[Point of Interest])
 
-        [ 1, 3, 14, 26, 142 ]
-    
-### Submit Point of Interest [POST]
-+ parameters
-    + user_id - The ID number of the user making the request
-    
+### Create New Point of Interest [POST /landmarks/new]
 + Request
-
-        {
-            "user_id": "1024",
-            "lat": "46.0092",
-            "lon": "-48.4452",
-            "title": "A New Landmark",
-            "description": "This landmark, my landmark, is the best landmark, I think we all agree. So good. The best."
-            "address_slug": "Amurica"
-        }
-        
+    + Attribute
+        + user (User) - The user that submitted the request
+        + landmark (Point of Interest) - The landmark that the user created
 + Response 200 (application/json)
+    + Attributes
+        + message (string): `Your landmark was received. It will be reviewed shortly - come back soon!` - The success message
 
-        {
-            "Landmark *new_id* saved successfully"
-        }
+### Tag Point of Interest for Friends [POST /landmarks/{id}]
++ Parameters
+    + id (number) - The id of the landmark that should be tagged for friends
++ Request
+    + Attributes
+        + user (User) - The user who submitted the tag
++ Response 200 (application/json)
+    + Attributes
+        - message (string): `The landmark *landmark_name* was successfully shared to your friends!` - The success message
+
+# Group Friends
+
+## Friends' Tagged Places Collection [/friends/tagged]
+
+### Get All Friends Tagged Places [GET /friends/tagged]
++ Response 200 (application/json)
+    + Attributes
+        - tagged_landmarks (array[Point of Interest])
         
-+ Response 404 (application/json)
 
-        {
-            "Landmark not submitted. Please try again later."
-        }
+### Get Specific Friend's Tagged Places [GET /friends/{id}/tagged]
++ Response 200 (application/json)
+    + Attributes
+        - tagged_landmarks (array[Point of Interest])
+
+
+# Data Structures
+
+## Point of Interest (object)
+- id (number) - The landmark identifier
+- lat (number) - The latitude of the landmark
+- lon (number) - The longitude of the landmark
+- address (string) - An approximate human-readable and searchable address for the landmark
+- title (string) - The name of the landmark
+- description (string) - A short description of what can be found at the landmark
+- tags array(string) - A list of keywords that can be used to describe the landmark
+
+## Comment (object)
+- id (number) - The comment identifier
+- author_id (number) - The user that posted the comment
+- landmark_id (number) - The landmark that the comment belongs to
+- date (string) - The date the comment was posted
+- status (string) - The status of the comment [PENDING/APPROVED/REJECTED]
+- message (string) - The message of the comment
+
+## User (object)
+- id (number) - The user identifier
+- name (string) - The user's name
+- email (string) - The user's email address
+- friends array(number) - A list of the user's friends
+- visited array(Point of Interest) - A list of places the user has visited
+- suggested array(Point of Interest) - A list of places the user has suggested to others
+
+## Address (object)
+- lat (number) - The latitude of the location
+- lon (number) - The longitude of the location
+- street (string) - The street number for the location
+- city (string) - The city the location is in
+- state (string) - The state the location is in
+- zip (number) - The zip code the location is in
