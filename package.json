@@ -4,7 +4,7 @@
   "description": "A Skeletal System for the Social Augmented Reality application for Software Architecture.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "concurrently --kill-others \"mongod -dbpath db\" \"node server\""
   },
   "repository": {
     "type": "git",
@@ -17,7 +17,17 @@
   },
   "homepage": "https://github.com/robertsaj/SE380-Skeletal-System#readme",
   "dependencies": {
+    "bcrypt-node": "^0.1.0",
+    "concurrently": "^3.1.0",
+    "connect-flash": "^0.1.1",
+    "cookie-parser": "^1.4.3",
+    "ejs": "^2.5.5",
     "express": "^4.14.1",
-    "mongodb": "^2.2.22"
+    "express-session": "^1.15.0",
+    "mongodb": "^2.2.22",
+    "mongoose": "^4.8.1",
+    "morgan": "^1.7.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0"
   }
 }
