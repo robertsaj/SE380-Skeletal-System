@@ -15,7 +15,7 @@ mongoose.connect(dbConfig.url);
 app.use(morgan('dev'));
 app.use(cookieParser());
 
-app.set('view engine', 'ejs');
+app.set('view engine', 'pug');
 
 //Passport for Authentication
 var passport = require('passport');

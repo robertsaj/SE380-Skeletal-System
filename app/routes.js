@@ -1,7 +1,7 @@
 module.exports = function(app, passport) {
 
     app.get('/', function(request, response) {
-        response.render('index.ejs', { message: request.flash('loginMessage') });
+        response.render('index.pug', { message: request.flash('loginMessage') });
     });
 
     app.post('/register', passport.authenticate('local-register', {
@@ -16,7 +16,7 @@ module.exports = function(app, passport) {
     );
 
     app.get('/home', isLoggedIn, function(request, response) {
-        response.render('home.ejs');
+        response.render('home.pug');
     });
 
     function isLoggedIn(request, response, next) {

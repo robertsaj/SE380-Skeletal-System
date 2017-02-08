@@ -1,0 +1,26 @@
+doctype html
+html(lang="en")
+    head
+        meta(charset="UTF-8")
+        title Index
+    body
+        if message.length > 0
+            div
+                #{message}
+        h1 Log In
+        form(action="/login" method="post")
+            div
+                label Email
+                input(type="text" name="email")
+            div
+                label Password
+                input(type="password" name="password")
+            input(type="submit" value="Log In")
+        form(action="/register" method="post")
+            div.form-group
+                label Email
+                input(type="text" class="form-control" name="email")
+            div.form-group
+                label Password
+                input(type="password" class="form-control" name="password")
+            button(type="submit") Signup
