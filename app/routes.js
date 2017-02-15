@@ -1,7 +1,6 @@
 module.exports = function(app, router) {
 
     router.use(function(request, response, next) {
-        console.log(request.method, request.url);
         next();
     });
 

@@ -7,6 +7,7 @@ var passport = require('passport');
 var flash = require('connect-flash');
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
+var bodyParser = require('body-parser');
 var session = require('express-session');
 var sass = require('node-sass-middleware');
 
@@ -20,12 +21,18 @@ require('./config/passport')(passport);
 //Node Packages
 app.use(morgan('dev'));
 app.use(cookieParser());
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 app.set('view engine', 'pug');
 app.set('views', __dirname + '/views/templates');
 
 //Session Setup
-app.use(session({secret: '{supersecretsecret}', saveUninitialized: true, resave: true}));
+app.use(session({
+    secret: '{supersecretsecret}',
+    saveUninitialized: true,
+    resave: true
+}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());

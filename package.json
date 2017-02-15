@@ -17,7 +17,9 @@
   },
   "homepage": "https://github.com/robertsaj/SE380-Skeletal-System#readme",
   "dependencies": {
+    "@google/maps": "^0.3.1",
     "bcrypt-node": "^0.1.0",
+    "body-parser": "^1.16.1",
     "concurrently": "^3.1.0",
     "connect-flash": "^0.1.1",
     "cookie-parser": "^1.4.3",

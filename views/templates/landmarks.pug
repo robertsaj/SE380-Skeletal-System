@@ -1,4 +1,6 @@
 extends base/base
 
 block content
-    h1 Landmarks Page
+    if landmarks
+        for landmark in landmarks
+            h3= landmark
