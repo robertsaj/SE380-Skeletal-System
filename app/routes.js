@@ -1,29 +1,23 @@
-module.exports = function(app, passport) {
+module.exports = function(app, router) {
 
-    app.get('/', function(request, response) {
-        response.render('index.pug', { message: request.flash('loginMessage') });
+    router.use(function(request, response, next) {
+        console.log(request.method, request.url);
+        next();
     });
 
-    app.post('/register', passport.authenticate('local-register', {
-        successRedirect: '/home',
-        failureRedirect: '/',
-        failureFlash: true
-    }));
+    var index = require('./routes/index');
+    app.use('/', index);
 
-    app.post('/login', passport.authenticate('local-login', { successRedirect: '/home',
-            failureRedirect: '/',
-            failureFlash: true })
-    );
+    var account = require('./routes/account');
+    app.use('/account', account);
 
-    app.get('/home', isLoggedIn, function(request, response) {
-        response.render('home.pug');
-    });
+    var landmarks = require('./routes/landmarks');
+    app.use('/landmarks', landmarks);
 
-    function isLoggedIn(request, response, next) {
-        if (request.isAuthenticated()) {
-            return next;
-        }
-        response.redirect('/');
-    }
+    var locations = require('./routes/locations');
+    app.use('/locations', locations);
+
+    var friends = require('./routes/friends');
+    app.use('/friends', friends);
 
 };

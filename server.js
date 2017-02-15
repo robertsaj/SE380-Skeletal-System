@@ -1,34 +1,45 @@
 //Express server for the Skeletal System
 var express = require('express');
+var app = express();
+var router = express.Router();
 var mongoose = require('mongoose');
-var session = require('express-session');
+var passport = require('passport');
 var flash = require('connect-flash');
 var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
-var app = express();
+var session = require('express-session');
+var sass = require('node-sass-middleware');
 
 //Database Setup
 var dbConfig = require('./config/database');
 mongoose.connect(dbConfig.url);
+
+//Passport for Authentication
+require('./config/passport')(passport);
 
 //Node Packages
 app.use(morgan('dev'));
 app.use(cookieParser());
 
 app.set('view engine', 'pug');
-
-//Passport for Authentication
-var passport = require('passport');
-require('./config/passport')(passport);
+app.set('views', __dirname + '/views/templates');
 
 //Session Setup
 app.use(session({secret: '{supersecretsecret}', saveUninitialized: true, resave: true}));
 app.use(passport.initialize());
 app.use(passport.session());
 app.use(flash());
+app.use(sass({
+    src: __dirname + '/views/style/sass',
+    dest: __dirname +'/views/style/css',
+    debug: true,
+    force: true,
+    outputStyle: 'compressed',
+    indentedSyntax: true
+}));
 
 //Routing Setup
-require('./app/routes')(app, passport);
+require('./app/routes')(app, router, passport);
 
 //Start the server
 var server = app.listen(8000, function() {

@@ -4,7 +4,7 @@
   "description": "A Skeletal System for the Social Augmented Reality application for Software Architecture.",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently --kill-others \"mongod -dbpath db\" \"node server\""
+    "start": "concurrently --kill-others \"mongod -dbpath db\" \"nodemon server.js\""
   },
   "repository": {
     "type": "git",
@@ -27,6 +27,7 @@
     "mongodb": "^2.2.22",
     "mongoose": "^4.8.1",
     "morgan": "^1.7.0",
+    "node-sass-middleware": "^0.11.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "pug": "^2.0.0-beta11"
