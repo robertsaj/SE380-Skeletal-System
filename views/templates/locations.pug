@@ -1,9 +1,15 @@
 extends base/base
 
 block content
-    h3 Search by Location
+    h3 Search by Distance
     form(action="/locations", method="post")
         input(type="text" name="lat" placeholder="Latitude" value="43.0469577")
         input(type="text" name="lon" placeholder="Longitude" value="-87.9078626")
         input(type="hidden" name="rankby" value="distance")
+        button(type="submit") Request
+    h3 Search by Popularity
+    form(action="/locations", method="post")
+        input(type="text" name="lat" placeholder="Latitude" value="43.0469577")
+        input(type="text" name="lon" placeholder="Longitude" value="-87.9078626")
+        input(type="hidden" name="rankby" value="prominence")
         button(type="submit") Request

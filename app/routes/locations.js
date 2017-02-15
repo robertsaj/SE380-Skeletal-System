@@ -9,20 +9,21 @@ router.get('/', function(request, response) {
 router.post('/', function(request, response) {
     var lat = request.body.lat;
     var lon = request.body.lon;
+    var rankby = request.body.rankby;
     var landmarks = [];
-    var outerResponse = response;
     googleMaps.placesNearby({
         location: [lat, lon],
-        radius: 500
-    }, function(error, response) {
+        // radius: 500,
+        rankby: rankby
+    }, function(error, body) {
         if (!error) {
-            response.json.results.forEach(function (e) {
+            body.json.results.forEach(function (e) {
                 landmarks.push(e.name);
             });
-            console.log(1, landmarks);
+            request.session.landmarks = landmarks;
+            response.redirect('/landmarks')
         }
     });
-    console.log(2, landmarks);
 });
 
 module.exports = router;
